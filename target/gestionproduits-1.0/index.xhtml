@@ -119,10 +119,33 @@
         }
 
         .product-icon {
-            background: var(--primary-gradient);
             color: white;
             border-radius: 12px;
             padding: 0.6rem;
+        }
+        
+        .product-icon.alimentaire {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+        
+        .product-icon.boissons {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+        
+        .product-icon.hygiene {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+        }
+        
+        .product-icon.entretien {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+        }
+        
+        .product-icon.electronique {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        
+        .product-icon.autre {
+            background: linear-gradient(135deg, #89f7fe, #66a6ff);
         }
 
         /* BADGES */
@@ -243,9 +266,36 @@
                         <h:column>
                             <f:facet name="header">PRODUIT</f:facet>
                             <div class="d-flex align-items-center">
-                                <div class="product-icon me-3">
-                                    <i class="bi bi-box"></i>
-                                </div>
+                                <h:panelGroup rendered="#{p.categorie eq 'Alimentaire'}">
+                                    <div class="product-icon alimentaire me-3">
+                                        <i class="bi bi-egg-fried"></i>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{p.categorie eq 'Boissons'}">
+                                    <div class="product-icon boissons me-3">
+                                        <i class="bi bi-cup-straw"></i>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{p.categorie eq 'Hygiène'}">
+                                    <div class="product-icon hygiene me-3">
+                                        <i class="bi bi-droplet"></i>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{p.categorie eq 'Entretien'}">
+                                    <div class="product-icon entretien me-3">
+                                        <i class="bi bi-spray-can"></i>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{p.categorie eq 'Électronique'}">
+                                    <div class="product-icon electronique me-3">
+                                        <i class="bi bi-phone"></i>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{p.categorie ne 'Alimentaire' and p.categorie ne 'Boissons' and p.categorie ne 'Hygiène' and p.categorie ne 'Entretien' and p.categorie ne 'Électronique'}">
+                                    <div class="product-icon autre me-3">
+                                        <i class="bi bi-box"></i>
+                                    </div>
+                                </h:panelGroup>
                                 <div>
                                     <div class="fw-semibold">#{p.nom}</div>
                                     <small class="text-muted">ID #{p.idProduit}</small>
@@ -263,6 +313,11 @@
                         </h:column>
 
                         <h:column>
+                            <f:facet name="header">CATÉGORIE</f:facet>
+                            <span class="badge bg-secondary">#{p.categorie}</span>
+                        </h:column>
+
+                        <h:column>
                             <f:facet name="header">STOCK</f:facet>
                             #{p.quantite}
                         </h:column>
@@ -277,16 +332,18 @@
                         <h:column>
                             <f:facet name="header">ACTIONS</f:facet>
                             <div class="d-flex gap-2">
-                                <h:commandLink class="btn btn-outline-primary"
-                                    action="#{produitBeans.editerProduit(p)}">
-                                    <f:ajax render="produitForm" />
-                                    <i class="bi bi-pencil"></i>
-                                </h:commandLink>
-                                <h:commandLink class="btn btn-outline-danger"
-                                    action="#{produitBeans.supprimerProduit(p)}">
-                                    <f:ajax render="tableForm" />
-                                    <i class="bi bi-trash"></i>
-                                </h:commandLink>
+                                <h:commandButton styleClass="btn btn-outline-primary"
+                                    action="#{produitBeans.prepareEdit(p)}"
+                                    value="✎"
+                                    onclick="openEditModal()">
+                                    <f:ajax execute="@this" render=":editForm" />
+                                </h:commandButton>
+                                <h:commandButton styleClass="btn btn-outline-danger"
+                                    action="#{produitBeans.supprimerProduit(p)}"
+                                    value="🗑"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">
+                                    <f:ajax execute="@this" render="tableForm" />
+                                </h:commandButton>
                             </div>
                         </h:column>
                     </h:dataTable>
@@ -295,7 +352,150 @@
         </main>
     </div>
 
-    <!-- MODAL -->
+
+    <!-- MODAL : Modifier Produit -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content">
+
+                <!-- HEADER -->
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-pencil-square me-2"></i>
+                        Modifier le produit
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body p-4">
+                    <h:form id="editForm">
+
+                        <!-- ID (caché mais affiché pour info) -->
+                        <div class="alert alert-info mb-3">
+                            <small><strong>ID Produit:</strong> #{produitBeans.produit.idProduit}</small>
+                        </div>
+
+                        <!-- NOM -->
+                        <label class="form-label">
+                            <i class="bi bi-card-text me-1"></i>
+                            Nom du produit
+                        </label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">
+                                <i class="bi bi-box"></i>
+                            </span>
+                            <h:inputText value="#{produitBeans.produit.nom}" styleClass="form-control"
+                                required="true" />
+                        </div>
+
+                        <!-- PRIX -->
+                        <label class="form-label">
+                            <i class="bi bi-currency-dollar me-1"></i>
+                            Prix
+                        </label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">
+                                <i class="bi bi-cash-coin"></i>
+                            </span>
+                            <h:inputText value="#{produitBeans.produit.prix}" styleClass="form-control"
+                                required="true" >
+                                <f:convertNumber type="number" minFractionDigits="2" />
+                            </h:inputText>
+                        </div>
+
+                        <!-- CATÉGORIE -->
+                        <label class="form-label">
+                            <i class="bi bi-tag me-1"></i>
+                            Catégorie
+                        </label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">
+                                <i class="bi bi-tags"></i>
+                            </span>
+                            <h:selectOneMenu value="#{produitBeans.produit.categorie}" styleClass="form-select">
+                                <f:selectItem itemValue="" itemLabel="-- Choisir une catégorie --" />
+                                <f:selectItem itemValue="Alimentaire" itemLabel="Alimentaire" />
+                                <f:selectItem itemValue="Boissons" itemLabel="Boissons" />
+                                <f:selectItem itemValue="Hygiène" itemLabel="Hygiène" />
+                                <f:selectItem itemValue="Entretien" itemLabel="Entretien" />
+                                <f:selectItem itemValue="Électronique" itemLabel="Électronique" />
+                                <f:selectItem itemValue="Autre" itemLabel="Autre" />
+                            </h:selectOneMenu>
+                        </div>
+
+                        <!-- QUANTITÉ -->
+                        <label class="form-label">
+                            <i class="bi bi-boxes me-1"></i>
+                            Quantité
+                        </label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">
+                                <i class="bi bi-123"></i>
+                            </span>
+                            <h:inputText value="#{produitBeans.produit.quantite}" styleClass="form-control"
+                                required="true" >
+                                <f:validateLongRange minimum="0" />
+                            </h:inputText>
+                        </div>
+
+                        <!-- SEUIL D'ALERTE -->
+                        <label class="form-label">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            Seuil d'alerte
+                        </label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">
+                                <i class="bi bi-bell"></i>
+                            </span>
+                            <h:inputText value="#{produitBeans.produit.seuilAlerte}" styleClass="form-control"
+                                required="true" >
+                                <f:validateLongRange minimum="0" />
+                            </h:inputText>
+                        </div>
+
+                        <!-- STATUT -->
+                        <label class="form-label">
+                            <i class="bi bi-toggle-on me-1"></i>
+                            Statut
+                        </label>
+                        <div class="input-group mb-4">
+                            <span class="input-group-text">
+                                <i class="bi bi-check-circle"></i>
+                            </span>
+                            <h:selectOneMenu value="#{produitBeans.produit.statut}" styleClass="form-select">
+                                <f:selectItem itemValue="ACTIF" itemLabel="ACTIF" />
+                                <f:selectItem itemValue="INACTIF" itemLabel="INACTIF" />
+                            </h:selectOneMenu>
+                        </div>
+
+                        <!-- ACTIONS -->
+                        <div class="d-grid gap-2">
+                            <h:commandButton value="Enregistrer les modifications" action="#{produitBeans.modifierProduit}"
+                                styleClass="btn btn-primary py-2">
+                                <f:ajax execute="@form" render=":tableForm @form" onevent="function(data){
+                                        if(data.status==='success'){
+                                            const modalEl = document.getElementById('editModal');
+                                            const modal = bootstrap.Modal.getInstance(modalEl);
+                                            if(modal) modal.hide();
+                                        }
+                                    }" />
+                            </h:commandButton>
+
+                            <h:commandButton value="Annuler" action="#{produitBeans.annulerEdition}"
+                                styleClass="btn btn-outline-secondary" onclick="closeEditModal(); return false;">
+                                <f:ajax execute="@this" render="editForm" />
+                            </h:commandButton>
+                        </div>
+
+                    </h:form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL : Nouveau Produit -->
     <div class="modal fade" id="crudModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-md">
@@ -343,16 +543,51 @@
                             </h:inputText>
                         </div>
 
+                        <!-- CATÉGORIE -->
+                        <label class="form-label">
+                            <i class="bi bi-tag me-1"></i>
+                            Catégorie
+                        </label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">
+                                <i class="bi bi-tags"></i>
+                            </span>
+                            <h:selectOneMenu value="#{produitBeans.produit.categorie}" styleClass="form-select">
+                                <f:selectItem itemValue="" itemLabel="-- Choisir une catégorie --" />
+                                <f:selectItem itemValue="Alimentaire" itemLabel="Alimentaire" />
+                                <f:selectItem itemValue="Boissons" itemLabel="Boissons" />
+                                <f:selectItem itemValue="Hygiène" itemLabel="Hygiène" />
+                                <f:selectItem itemValue="Entretien" itemLabel="Entretien" />
+                                <f:selectItem itemValue="Électronique" itemLabel="Électronique" />
+                                <f:selectItem itemValue="Autre" itemLabel="Autre" />
+                            </h:selectOneMenu>
+                        </div>
+
                         <!-- QUANTITÉ -->
                         <label class="form-label">
                             <i class="bi bi-boxes me-1"></i>
                             Quantité
                         </label>
-                        <div class="input-group mb-4">
+                        <div class="input-group mb-3">
                             <span class="input-group-text">
                                 <i class="bi bi-123"></i>
                             </span>
                             <h:inputText value="#{produitBeans.produit.quantite}" styleClass="form-control"
+                                required="true" >
+                                <f:validateLongRange minimum="0" />
+                            </h:inputText>
+                        </div>
+
+                        <!-- SEUIL D'ALERTE -->
+                        <label class="form-label">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            Seuil d'alerte
+                        </label>
+                        <div class="input-group mb-4">
+                            <span class="input-group-text">
+                                <i class="bi bi-bell"></i>
+                            </span>
+                            <h:inputText value="#{produitBeans.produit.seuilAlerte}" styleClass="form-control"
                                 required="true" >
                                 <f:validateLongRange minimum="0" />
                             </h:inputText>
@@ -385,6 +620,18 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function openEditModal() {
+            const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+            editModal.show();
+        }
+        
+        function closeEditModal() {
+            const modalEl = document.getElementById('editModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if(modal) modal.hide();
+        }
+    </script>
 </h:body>
 
 </html>

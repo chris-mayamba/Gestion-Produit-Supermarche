@@ -25,13 +25,25 @@ public class Produit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_produit")
     private Long idProduit;
 
+    @Column(name = "nom")
     private String nom;
+    
+    @Column(name = "prix")
     private BigDecimal prix;
+    
+    @Column(name = "categorie")
     private String categorie;
+    
+    @Column(name = "quantite")
     private int quantite;
+    
+    @Column(name = "seuil_alerte")
     private int seuilAlerte;
+    
+    @Column(name = "statut")
     private String statut = "ACTIF";
     
     public Long getIdProduit() {

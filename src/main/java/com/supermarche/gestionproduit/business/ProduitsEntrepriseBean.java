@@ -5,6 +5,7 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import java.util.List;
 
 @Stateless
@@ -15,30 +16,35 @@ public class ProduitsEntrepriseBean {
     private EntityManager em;
 
     // CREATE
+    @Transactional
     public void ajouterProduit(Produit produit) {
         produit.setStatut("ACTIF");
         em.persist(produit);
     }
 
     // READ - tous les produits actifs
+    @Transactional
     public List<Produit> listerProduits() {
         return em.createQuery(
-            "SELECT p FROM Produit p WHERE p.statut = 'ACTIF'",
+            "SELECT p FROM Produit p WHERE (p.statut = 'ACTIF' OR p.statut IS NULL)",
             Produit.class
         ).getResultList();
     }
 
     // READ - par ID
+    @Transactional
     public Produit trouverProduit(Long id) {
         return em.find(Produit.class, id);
     }
 
     // UPDATE
+    @Transactional
     public Produit modifierProduit(Produit produit) {
         return em.merge(produit);
     }
 
     // DELETE LOGIQUE
+    @Transactional
     public void supprimerProduit(Long id) {
         Produit p = em.find(Produit.class, id);
         if (p != null) {
@@ -48,6 +54,7 @@ public class ProduitsEntrepriseBean {
     }
 
     // DIMINUER LE STOCK (appelé par Service Vente)
+    @Transactional
     public boolean diminuerStock(Long idProduit, int quantiteVendue) {
         Produit p = em.find(Produit.class, idProduit);
 
@@ -65,6 +72,7 @@ public class ProduitsEntrepriseBean {
     }
 
     // PRODUITS EN RUPTURE
+    @Transactional
     public List<Produit> produitsEnRupture() {
         return em.createQuery(
             "SELECT p FROM Produit p WHERE p.quantite <= p.seuilAlerte AND p.statut = 'ACTIF'",
