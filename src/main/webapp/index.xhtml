@@ -259,6 +259,14 @@
             </div>
 
             <!-- TABLE -->
+            <h:form id="messagesForm">
+                <h:messages id="messages" styleClass="alert alert-dismissible fade show" 
+                    errorClass="alert alert-danger" 
+                    infoClass="alert alert-success" 
+                    warnClass="alert alert-warning"
+                    showDetail="true" showSummary="true" />
+            </h:form>
+            
             <div class="table-container">
                 <h:form id="tableForm">
                     <h:dataTable value="#{produitBeans.produits}" var="p"
@@ -371,6 +379,10 @@
                 <!-- BODY -->
                 <div class="modal-body p-4">
                     <h:form id="editForm">
+                        
+                        <!-- Messages d'erreur -->
+                        <h:messages styleClass="alert alert-danger" 
+                            showDetail="true" showSummary="false" />
 
                         <!-- ID (caché mais affiché pour info) -->
                         <div class="alert alert-info mb-3">
@@ -380,42 +392,54 @@
                         <!-- NOM -->
                         <label class="form-label">
                             <i class="bi bi-card-text me-1"></i>
-                            Nom du produit
+                            Nom du produit *
                         </label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">
                                 <i class="bi bi-box"></i>
                             </span>
-                            <h:inputText value="#{produitBeans.produit.nom}" styleClass="form-control"
-                                required="true" />
+                            <h:inputText value="#{produitBeans.produit.nom}" 
+                                styleClass="form-control"
+                                required="true"
+                                requiredMessage="Le nom est obligatoire"
+                                validatorMessage="Le nom doit contenir au moins 3 caractères">
+                                <f:validateLength minimum="3" maximum="100" />
+                            </h:inputText>
                         </div>
 
                         <!-- PRIX -->
                         <label class="form-label">
                             <i class="bi bi-currency-dollar me-1"></i>
-                            Prix
+                            Prix *
                         </label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">
                                 <i class="bi bi-cash-coin"></i>
                             </span>
-                            <h:inputText value="#{produitBeans.produit.prix}" styleClass="form-control"
-                                required="true" >
+                            <h:inputText value="#{produitBeans.produit.prix}" 
+                                styleClass="form-control"
+                                required="true"
+                                requiredMessage="Le prix est obligatoire"
+                                validatorMessage="Le prix doit être supérieur à 0" >
                                 <f:convertNumber type="number" minFractionDigits="2" />
-                            </h:inputText>
+                                <f:validateDoubleRange minimum="0.01" />
+            </h:inputText>
                         </div>
 
                         <!-- CATÉGORIE -->
                         <label class="form-label">
                             <i class="bi bi-tag me-1"></i>
-                            Catégorie
+                            Catégorie *
                         </label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">
                                 <i class="bi bi-tags"></i>
                             </span>
-                            <h:selectOneMenu value="#{produitBeans.produit.categorie}" styleClass="form-select">
-                                <f:selectItem itemValue="" itemLabel="-- Choisir une catégorie --" />
+                            <h:selectOneMenu value="#{produitBeans.produit.categorie}" 
+                                styleClass="form-select"
+                                required="true"
+                                requiredMessage="La catégorie est obligatoire">
+                                <f:selectItem itemValue="" itemLabel="-- Choisir une catégorie --" noSelectionOption="true" />
                                 <f:selectItem itemValue="Alimentaire" itemLabel="Alimentaire" />
                                 <f:selectItem itemValue="Boissons" itemLabel="Boissons" />
                                 <f:selectItem itemValue="Hygiène" itemLabel="Hygiène" />
@@ -428,14 +452,17 @@
                         <!-- QUANTITÉ -->
                         <label class="form-label">
                             <i class="bi bi-boxes me-1"></i>
-                            Quantité
+                            Quantité *
                         </label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">
                                 <i class="bi bi-123"></i>
                             </span>
-                            <h:inputText value="#{produitBeans.produit.quantite}" styleClass="form-control"
-                                required="true" >
+                            <h:inputText value="#{produitBeans.produit.quantite}" 
+                                styleClass="form-control"
+                                required="true"
+                                requiredMessage="La quantité est obligatoire"
+                                validatorMessage="La quantité doit être positive" >
                                 <f:validateLongRange minimum="0" />
                             </h:inputText>
                         </div>
@@ -443,14 +470,17 @@
                         <!-- SEUIL D'ALERTE -->
                         <label class="form-label">
                             <i class="bi bi-exclamation-triangle me-1"></i>
-                            Seuil d'alerte
+                            Seuil d'alerte *
                         </label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">
                                 <i class="bi bi-bell"></i>
                             </span>
-                            <h:inputText value="#{produitBeans.produit.seuilAlerte}" styleClass="form-control"
-                                required="true" >
+                            <h:inputText value="#{produitBeans.produit.seuilAlerte}" 
+                                styleClass="form-control"
+                                required="true"
+                                requiredMessage="Le seuil d'alerte est obligatoire"
+                                validatorMessage="Le seuil d'alerte doit être positif" >
                                 <f:validateLongRange minimum="0" />
                             </h:inputText>
                         </div>
@@ -474,11 +504,16 @@
                         <div class="d-grid gap-2">
                             <h:commandButton value="Enregistrer les modifications" action="#{produitBeans.modifierProduit}"
                                 styleClass="btn btn-primary py-2">
-                                <f:ajax execute="@form" render=":tableForm @form" onevent="function(data){
+                                <f:ajax execute="@form" render="@form :tableForm :messagesForm" onevent="function(data){
                                         if(data.status==='success'){
-                                            const modalEl = document.getElementById('editModal');
-                                            const modal = bootstrap.Modal.getInstance(modalEl);
-                                            if(modal) modal.hide();
+                                            setTimeout(function() {
+                                                const hasErrors = document.querySelectorAll('.alert-danger').length > 0;
+                                                if(!hasErrors) {
+                                                    const modalEl = document.getElementById('editModal');
+                                                    const modal = bootstrap.Modal.getInstance(modalEl);
+                                                    if(modal) modal.hide();
+                                                }
+                                            }, 100);
                                         }
                                     }" />
                             </h:commandButton>
@@ -514,18 +549,27 @@
                 <!-- BODY -->
                 <div class="modal-body p-4">
                     <h:form id="produitForm">
+                        
+                        <!-- Messages d'erreur -->
+                        <h:messages styleClass="alert alert-danger" 
+                            showDetail="true" showSummary="false" />
 
                         <!-- NOM -->
                         <label class="form-label">
                             <i class="bi bi-card-text me-1"></i>
-                            Nom du produit
+                            Nom du produit *
                         </label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">
                                 <i class="bi bi-box"></i>
                             </span>
-                            <h:inputText value="#{produitBeans.produit.nom}" styleClass="form-control"
-                                required="true" />
+                            <h:inputText value="#{produitBeans.produit.nom}" 
+                                styleClass="form-control"
+                                required="true"
+                                requiredMessage="Le nom est obligatoire"
+                                validatorMessage="Le nom doit contenir au moins 3 caractères">
+                                <f:validateLength minimum="3" maximum="100" />
+                            </h:inputText>
                         </div>
 
                         <!-- PRIX -->
@@ -566,14 +610,17 @@
                         <!-- QUANTITÉ -->
                         <label class="form-label">
                             <i class="bi bi-boxes me-1"></i>
-                            Quantité
+                            Quantité *
                         </label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">
                                 <i class="bi bi-123"></i>
                             </span>
-                            <h:inputText value="#{produitBeans.produit.quantite}" styleClass="form-control"
-                                required="true" >
+                            <h:inputText value="#{produitBeans.produit.quantite}" 
+                                styleClass="form-control"
+                                required="true"
+                                requiredMessage="La quantité est obligatoire"
+                                validatorMessage="La quantité doit être positive" >
                                 <f:validateLongRange minimum="0" />
                             </h:inputText>
                         </div>
@@ -581,14 +628,17 @@
                         <!-- SEUIL D'ALERTE -->
                         <label class="form-label">
                             <i class="bi bi-exclamation-triangle me-1"></i>
-                            Seuil d'alerte
+                            Seuil d'alerte *
                         </label>
                         <div class="input-group mb-4">
                             <span class="input-group-text">
                                 <i class="bi bi-bell"></i>
                             </span>
-                            <h:inputText value="#{produitBeans.produit.seuilAlerte}" styleClass="form-control"
-                                required="true" >
+                            <h:inputText value="#{produitBeans.produit.seuilAlerte}" 
+                                styleClass="form-control"
+                                required="true"
+                                requiredMessage="Le seuil d'alerte est obligatoire"
+                                validatorMessage="Le seuil d'alerte doit être positif" >
                                 <f:validateLongRange minimum="0" />
                             </h:inputText>
                         </div>
@@ -597,11 +647,16 @@
                         <div class="d-grid gap-2">
                             <h:commandButton value="Enregistrer le produit" action="#{produitBeans.ajouterProduit}"
                                 styleClass="btn btn-primary py-2">
-                                <f:ajax execute="@form" render="tableForm @form" onevent="function(data){
+                                <f:ajax execute="@form" render="@form :tableForm :messagesForm" onevent="function(data){
                                         if(data.status==='success'){
-                                            const modalEl = document.getElementById('crudModal');
-                                            const modal = bootstrap.Modal.getInstance(modalEl);
-                                            if(modal) modal.hide();
+                                            setTimeout(function() {
+                                                const hasErrors = document.querySelectorAll('.alert-danger').length > 0;
+                                                if(!hasErrors) {
+                                                    const modalEl = document.getElementById('crudModal');
+                                                    const modal = bootstrap.Modal.getInstance(modalEl);
+                                                    if(modal) modal.hide();
+                                                }
+                                            }, 100);
                                         }
                                     }" />
                             </h:commandButton>
