@@ -2,35 +2,44 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.supermarche.gestionproduit.beans;
+package com.supermarche.gestionproduit.entities;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Named;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.io.Serializable;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+
 
 /**
  *
  * @author Eden
  */
-@Named(value = "produitsBeans")
-@RequestScoped
-public class ProduitsBeans implements Serializable{
-    
-    private int id;
+
+
+@Entity
+@Table(name = "produit")
+public class Produit {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idProduit;
+
     private String nom;
-    private float prix;
+    private BigDecimal prix;
     private String categorie;
     private int quantite;
     private int seuilAlerte;
-    private String status;
+    private String statut = "ACTIF";
     
-    
-    public int getId() {
-        return id;
+    public Long getIdProduit() {
+        return idProduit;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdProduit(Long idProduit) {
+        this.idProduit = idProduit;
     }
 
     public String getNom() {
@@ -41,11 +50,11 @@ public class ProduitsBeans implements Serializable{
         this.nom = nom;
     }
 
-    public float getPrix() {
+    public BigDecimal getPrix() {
         return prix;
     }
 
-    public void setPrix(float prix) {
+    public void setPrix(BigDecimal prix) {
         this.prix = prix;
     }
 
@@ -73,12 +82,17 @@ public class ProduitsBeans implements Serializable{
         this.seuilAlerte = seuilAlerte;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatut() {
+        return statut;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    // getters et setters
+    public void setStatut(String statut) {    
+        this.statut = statut;
     }
 
+    @Override
+    public String toString() {
+        return "com.supermarche.gestionproduit.entities.Produit[ id=" + idProduit + " ]";
+    }
 }
