@@ -258,13 +258,16 @@
                 </button>
             </div>
 
-            <!-- TABLE -->
+            <!-- MESSAGES DE SUCCÈS -->
             <h:form id="messagesForm">
-                <h:messages id="messages" styleClass="alert alert-dismissible fade show" 
-                    errorClass="alert alert-danger" 
+                <h:messages id="messages" 
+                    styleClass="alert alert-dismissible fade show" 
+                    errorStyle="display:none;"
                     infoClass="alert alert-success" 
                     warnClass="alert alert-warning"
-                    showDetail="true" showSummary="true" />
+                    showDetail="true" 
+                    showSummary="true"
+                    globalOnly="true" />
             </h:form>
             
             <div class="table-container">
@@ -381,8 +384,13 @@
                     <h:form id="editForm">
                         
                         <!-- Messages d'erreur -->
-                        <h:messages styleClass="alert alert-danger" 
-                            showDetail="true" showSummary="false" />
+                        <h:messages 
+                            styleClass="alert alert-danger mb-3" 
+                            errorClass="alert alert-danger"
+                            infoStyle="display:none;"
+                            warnStyle="display:none;"
+                            showDetail="true" 
+                            showSummary="true" />
 
                         <!-- ID (caché mais affiché pour info) -->
                         <div class="alert alert-info mb-3">
@@ -504,18 +512,7 @@
                         <div class="d-grid gap-2">
                             <h:commandButton value="Enregistrer les modifications" action="#{produitBeans.modifierProduit}"
                                 styleClass="btn btn-primary py-2">
-                                <f:ajax execute="@form" render="@form :tableForm :messagesForm" onevent="function(data){
-                                        if(data.status==='success'){
-                                            setTimeout(function() {
-                                                const hasErrors = document.querySelectorAll('.alert-danger').length > 0;
-                                                if(!hasErrors) {
-                                                    const modalEl = document.getElementById('editModal');
-                                                    const modal = bootstrap.Modal.getInstance(modalEl);
-                                                    if(modal) modal.hide();
-                                                }
-                                            }, 100);
-                                        }
-                                    }" />
+                                <f:ajax execute="@form" render="@form :tableForm :messagesForm" />
                             </h:commandButton>
 
                             <h:commandButton value="Annuler" action="#{produitBeans.annulerEdition}"
@@ -551,8 +548,13 @@
                     <h:form id="produitForm">
                         
                         <!-- Messages d'erreur -->
-                        <h:messages styleClass="alert alert-danger" 
-                            showDetail="true" showSummary="false" />
+                        <h:messages 
+                            styleClass="alert alert-danger mb-3" 
+                            errorClass="alert alert-danger"
+                            infoStyle="display:none;"
+                            warnStyle="display:none;"
+                            showDetail="true" 
+                            showSummary="true" />
 
                         <!-- NOM -->
                         <label class="form-label">
@@ -647,18 +649,7 @@
                         <div class="d-grid gap-2">
                             <h:commandButton value="Enregistrer le produit" action="#{produitBeans.ajouterProduit}"
                                 styleClass="btn btn-primary py-2">
-                                <f:ajax execute="@form" render="@form :tableForm :messagesForm" onevent="function(data){
-                                        if(data.status==='success'){
-                                            setTimeout(function() {
-                                                const hasErrors = document.querySelectorAll('.alert-danger').length > 0;
-                                                if(!hasErrors) {
-                                                    const modalEl = document.getElementById('crudModal');
-                                                    const modal = bootstrap.Modal.getInstance(modalEl);
-                                                    if(modal) modal.hide();
-                                                }
-                                            }, 100);
-                                        }
-                                    }" />
+                                <f:ajax execute="@form" render="@form :tableForm :messagesForm" />
                             </h:commandButton>
 
                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">

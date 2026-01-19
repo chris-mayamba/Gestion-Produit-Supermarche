@@ -49,6 +49,12 @@ public class ProduitsBeans implements Serializable {
         produitsService.ajouterProduit(produit);
         addMessage(FacesMessage.SEVERITY_INFO, "Succès", "Produit ajouté avec succès");
         produit = new Produit();
+        
+        // Fermer le modal via JavaScript
+        FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add(
+            "if(bootstrap.Modal.getInstance(document.getElementById('crudModal'))) " +
+            "bootstrap.Modal.getInstance(document.getElementById('crudModal')).hide();"
+        );
     }
     
     private boolean validerProduit() {
@@ -116,6 +122,12 @@ public class ProduitsBeans implements Serializable {
         }
         produit = new Produit();
         editId = null;
+        
+        // Fermer le modal via JavaScript
+        FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add(
+            "if(bootstrap.Modal.getInstance(document.getElementById('editModal'))) " +
+            "bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();"
+        );
     }
     
     public void annulerEdition() {

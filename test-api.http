@@ -1,0 +1,67 @@
+### ========================================
+### API REST - Service Gestion des Produits
+### Fichier de test pour REST Client (VS Code)
+### ========================================
+
+@baseUrl = http://localhost:8080/gestionproduits-1.0/api/produits
+
+### 1. Lister tous les produits actifs
+GET {{baseUrl}}
+Accept: application/json
+
+### 2. Obtenir un produit spécifique (ID 1)
+GET {{baseUrl}}/1
+Accept: application/json
+
+### 3. Vérifier disponibilité d'un produit (quantité: 5)
+GET {{baseUrl}}/1/disponibilite?quantite=5
+Accept: application/json
+
+### 4. Vérifier disponibilité (quantité élevée pour tester stock insuffisant)
+GET {{baseUrl}}/1/disponibilite?quantite=1000
+Accept: application/json
+
+### 5. Mettre à jour le stock après vente
+PUT {{baseUrl}}/1/stock
+Content-Type: application/json
+
+{
+  "quantiteVendue": 5
+}
+
+### 6. Lister les produits en rupture de stock
+GET {{baseUrl}}/rupture
+Accept: application/json
+
+### 7. Ajouter un nouveau produit
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "nom": "Test Produit API",
+  "prix": 12.99,
+  "categorie": "Autre",
+  "quantite": 50,
+  "seuilAlerte": 10
+}
+
+### 8. Modifier un produit existant
+PUT {{baseUrl}}/1
+Content-Type: application/json
+
+{
+  "nom": "Produit Modifié",
+  "prix": 15.50,
+  "categorie": "Alimentaire",
+  "quantite": 100,
+  "seuilAlerte": 20,
+  "statut": "ACTIF"
+}
+
+### 9. Supprimer un produit (soft delete)
+DELETE {{baseUrl}}/1
+Accept: application/json
+
+### 10. Tester un produit inexistant (404)
+GET {{baseUrl}}/99999
+Accept: application/json
