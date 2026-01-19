@@ -4,81 +4,50 @@
  */
 package com.supermarche.gestionproduit.beans;
 
+import com.supermarche.gestionproduit.business.ProduitsEntrepriseBean;
+import com.supermarche.gestionproduit.entities.Produit;
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
+import java.util.List;
 
 /**
- *
- * @author Eden
+ * JSF backing bean exposing CRUD operations for the table view.
  */
-@Named(value = "produitsBeans")
+@Named("produitBeans")
 @RequestScoped
-public class ProduitsBeans implements Serializable{
-    
-    private int id;
-    private String nom;
-    private float prix;
-    private String categorie;
-    private int quantite;
-    private int seuilAlerte;
-    private String status;
-    
-    
-    public int getId() {
-        return id;
+public class ProduitsBeans implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @EJB
+    private ProduitsEntrepriseBean produitsService;
+
+    private Produit produit = new Produit();
+
+    public List<Produit> getProduits() {
+        return produitsService.listerProduits();
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Produit getProduit() {
+        return produit;
     }
 
-    public String getNom() {
-        return nom;
+    public void setProduit(Produit produit) {
+        this.produit = produit;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void ajouterProduit() {
+        produitsService.ajouterProduit(produit);
+        produit = new Produit();
     }
 
-    public float getPrix() {
-        return prix;
+    public void editerProduit(Produit produit) {
+        this.produit = produit;
     }
 
-    public void setPrix(float prix) {
-        this.prix = prix;
+    public void supprimerProduit(Produit produit) {
+        produitsService.supprimerProduit(produit.getIdProduit());
     }
-
-    public String getCategorie() {
-        return categorie;
-    }
-
-    public void setCategorie(String categorie) {
-        this.categorie = categorie;
-    }
-
-    public int getQuantite() {
-        return quantite;
-    }
-
-    public void setQuantite(int quantite) {
-        this.quantite = quantite;
-    }
-
-    public int getSeuilAlerte() {
-        return seuilAlerte;
-    }
-
-    public void setSeuilAlerte(int seuilAlerte) {
-        this.seuilAlerte = seuilAlerte;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
 }

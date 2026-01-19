@@ -1,4 +1,7 @@
+com\supermarche\gestionproduit\entities\Produit.class
 com\supermarche\gestionproduit\JakartaRestConfiguration.class
 com\supermarche\gestionproduit\beans\NavigationBean.class
+com\supermarche\gestionproduit\beans\ProduitsBeans.class
 com\supermarche\gestionproduit\ProduitsResource.class
 com\supermarche\gestionproduit\resources\JakartaEE10Resource.class
+com\supermarche\gestionproduit\business\ProduitsEntrepriseBean.class

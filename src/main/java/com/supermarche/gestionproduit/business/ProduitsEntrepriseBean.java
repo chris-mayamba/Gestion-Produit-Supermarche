@@ -1,7 +1,6 @@
 package com.supermarche.gestionproduit.business;
 
 import com.supermarche.gestionproduit.entities.Produit;
-import com.supermarche.gestionproduit.beans.ProduitsBeans;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.persistence.EntityManager;

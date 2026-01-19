@@ -238,7 +238,7 @@
             <!-- TABLE -->
             <div class="table-container">
                 <h:form id="tableForm">
-                    <h:dataTable value="#{produitController.produits}" var="p"
+                    <h:dataTable value="#{produitBeans.produits}" var="p"
                         styleClass="table table-hover align-middle">
                         <h:column>
                             <f:facet name="header">PRODUIT</f:facet>
@@ -248,14 +248,18 @@
                                 </div>
                                 <div>
                                     <div class="fw-semibold">#{p.nom}</div>
-                                    <small class="text-muted">ID #{p.id}</small>
+                                    <small class="text-muted">ID #{p.idProduit}</small>
                                 </div>
                             </div>
                         </h:column>
 
                         <h:column>
                             <f:facet name="header">PRIX</f:facet>
-                            <strong>$ #{p.prix}</strong>
+                            <strong>
+                                <h:outputText value="#{p.prix}">
+                                    <f:convertNumber type="currency" currencySymbol="$" />
+                                </h:outputText>
+                            </strong>
                         </h:column>
 
                         <h:column>
@@ -265,22 +269,22 @@
 
                         <h:column>
                             <f:facet name="header">STATUT</f:facet>
-
-                            <span class="badge badge-success" rendered="#{p.quantite gt 10}">OK</span>
-                            <span class="badge badge-warning"
-                                rendered="#{p.quantite le 10 and p.quantite gt 0}">Bas</span>
-                            <span class="badge badge-danger" rendered="#{p.quantite eq 0}">Rupture</span>
+                            <h:panelGroup rendered="#{p.quantite gt 10}" styleClass="badge badge-success">OK</h:panelGroup>
+                            <h:panelGroup rendered="#{p.quantite le 10 and p.quantite gt 0}" styleClass="badge badge-warning">Bas</h:panelGroup>
+                            <h:panelGroup rendered="#{p.quantite eq 0}" styleClass="badge badge-danger">Rupture</h:panelGroup>
                         </h:column>
 
                         <h:column>
                             <f:facet name="header">ACTIONS</f:facet>
                             <div class="d-flex gap-2">
                                 <h:commandLink class="btn btn-outline-primary"
-                                    action="#{produitController.editerProduit(p)}">
+                                    action="#{produitBeans.editerProduit(p)}">
+                                    <f:ajax render="produitForm" />
                                     <i class="bi bi-pencil"></i>
                                 </h:commandLink>
                                 <h:commandLink class="btn btn-outline-danger"
-                                    action="#{produitController.supprimerProduit(p)}">
+                                    action="#{produitBeans.supprimerProduit(p)}">
+                                    <f:ajax render="tableForm" />
                                     <i class="bi bi-trash"></i>
                                 </h:commandLink>
                             </div>
@@ -320,8 +324,8 @@
                             <span class="input-group-text">
                                 <i class="bi bi-box"></i>
                             </span>
-                            <h:inputText value="#{produitController.produit.nom}" styleClass="form-control"
-                                required="true" placeholder="Ex : Riz parfumé" />
+                            <h:inputText value="#{produitBeans.produit.nom}" styleClass="form-control"
+                                required="true" />
                         </div>
 
                         <!-- PRIX -->
@@ -333,8 +337,8 @@
                             <span class="input-group-text">
                                 <i class="bi bi-cash-coin"></i>
                             </span>
-                            <h:inputText value="#{produitController.produit.prix}" styleClass="form-control"
-                                required="true" placeholder="0.00">
+                            <h:inputText value="#{produitBeans.produit.prix}" styleClass="form-control"
+                                required="true" >
                                 <f:convertNumber type="number" minFractionDigits="2" />
                             </h:inputText>
                         </div>
@@ -348,15 +352,15 @@
                             <span class="input-group-text">
                                 <i class="bi bi-123"></i>
                             </span>
-                            <h:inputText value="#{produitController.produit.quantite}" styleClass="form-control"
-                                required="true" placeholder="0">
+                            <h:inputText value="#{produitBeans.produit.quantite}" styleClass="form-control"
+                                required="true" >
                                 <f:validateLongRange minimum="0" />
                             </h:inputText>
                         </div>
 
                         <!-- ACTIONS -->
                         <div class="d-grid gap-2">
-                            <h:commandButton value="Enregistrer le produit" action="#{produitController.ajouterProduit}"
+                            <h:commandButton value="Enregistrer le produit" action="#{produitBeans.ajouterProduit}"
                                 styleClass="btn btn-primary py-2">
                                 <f:ajax execute="@form" render="tableForm @form" onevent="function(data){
                                         if(data.status==='success'){
