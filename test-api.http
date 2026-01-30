@@ -3,7 +3,7 @@
 ### Fichier de test pour REST Client (VS Code)
 ### ========================================
 
-@baseUrl = http://localhost:8080/gestionproduits-1.0/api/produits
+@baseUrl = http://desktop-8s3floa:8080/gestionproduits/resources/produits
 
 ### 1. Lister tous les produits actifs
 GET {{baseUrl}}

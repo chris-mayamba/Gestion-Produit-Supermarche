@@ -47,7 +47,7 @@ public class ProduitsBeans implements Serializable {
             return;
         }
         produitsService.ajouterProduit(produit);
-        addMessage(FacesMessage.SEVERITY_INFO, "Succès", "Produit ajouté avec succès");
+        addMessage(FacesMessage.SEVERITY_INFO, "Succès", "Le produit a été enregistré avec succès");
         produit = new Produit();
         
         // Fermer le modal via JavaScript
@@ -138,5 +138,18 @@ public class ProduitsBeans implements Serializable {
     public void supprimerProduit(Produit produit) {
         produitsService.supprimerProduit(produit.getIdProduit());
         addMessage(FacesMessage.SEVERITY_INFO, "Succès", "Produit supprimé avec succès");
+    }
+    
+    // STATISTIQUES
+    public long getNombreProduitsActifs() {
+        return produitsService.compterProduitsActifs();
+    }
+    
+    public long getNombreProduitsEnRupture() {
+        return produitsService.compterProduitsEnRupture();
+    }
+    
+    public long getStockTotal() {
+        return produitsService.calculerStockTotal();
     }
 }

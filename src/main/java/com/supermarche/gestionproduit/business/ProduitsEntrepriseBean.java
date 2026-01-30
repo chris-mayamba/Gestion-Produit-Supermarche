@@ -79,5 +79,31 @@ public class ProduitsEntrepriseBean {
             Produit.class
         ).getResultList();
     }
+    
+    // STATISTIQUES
+    @Transactional
+    public long compterProduitsActifs() {
+        return em.createQuery(
+            "SELECT COUNT(p) FROM Produit p WHERE p.statut = 'ACTIF'",
+            Long.class
+        ).getSingleResult();
+    }
+    
+    @Transactional
+    public long compterProduitsEnRupture() {
+        return em.createQuery(
+            "SELECT COUNT(p) FROM Produit p WHERE p.quantite <= p.seuilAlerte AND p.statut = 'ACTIF'",
+            Long.class
+        ).getSingleResult();
+    }
+    
+    @Transactional
+    public long calculerStockTotal() {
+        Long total = em.createQuery(
+            "SELECT SUM(p.quantite) FROM Produit p WHERE p.statut = 'ACTIF'",
+            Long.class
+        ).getSingleResult();
+        return total != null ? total : 0;
+    }
 }
 

@@ -237,12 +237,16 @@
 
             <h6 class="text-muted text-uppercase mb-3">Statistiques</h6>
             <div class="stats-card mb-3">
-                <div class="fw-bold fs-4">248</div>
-                <small class="text-muted">Produits en stock</small>
+                <div class="fw-bold fs-4">#{produitBeans.nombreProduitsActifs}</div>
+                <small class="text-muted">Produits actifs</small>
+            </div>
+            <div class="stats-card mb-3">
+                <div class="fw-bold fs-4">#{produitBeans.stockTotal}</div>
+                <small class="text-muted">Unités en stock</small>
             </div>
             <div class="stats-card">
-                <div class="fw-bold fs-4">12</div>
-                <small class="text-muted">En rupture</small>
+                <div class="fw-bold fs-4 text-danger">#{produitBeans.nombreProduitsEnRupture}</div>
+                <small class="text-muted">En rupture/alerte</small>
             </div>
         </aside>
 
@@ -335,8 +339,8 @@
 
                         <h:column>
                             <f:facet name="header">STATUT</f:facet>
-                            <h:panelGroup rendered="#{p.quantite gt 10}" styleClass="badge badge-success">OK</h:panelGroup>
-                            <h:panelGroup rendered="#{p.quantite le 10 and p.quantite gt 0}" styleClass="badge badge-warning">Bas</h:panelGroup>
+                            <h:panelGroup rendered="#{p.quantite gt p.seuilAlerte}" styleClass="badge badge-success">OK</h:panelGroup>
+                            <h:panelGroup rendered="#{p.quantite le p.seuilAlerte and p.quantite gt 0}" styleClass="badge badge-warning">⚠️ Alerte</h:panelGroup>
                             <h:panelGroup rendered="#{p.quantite eq 0}" styleClass="badge badge-danger">Rupture</h:panelGroup>
                         </h:column>
 

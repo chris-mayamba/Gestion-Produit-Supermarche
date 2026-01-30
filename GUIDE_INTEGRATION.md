@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class ProduitServiceClient {
     
-    private static final String BASE_URL = "http://localhost:8080/gestionproduits-1.0/api/produits";
+    private static final String BASE_URL = "http://localhost:8080/gestionproduits/resources/produits";
     private final Client client;
     
     public ProduitServiceClient() {
@@ -162,7 +162,7 @@ import java.util.Map;
 
 public class RapportService {
     
-    private static final String BASE_URL = "http://localhost:8080/gestionproduits-1.0/api/produits";
+    private static final String BASE_URL = "http://localhost:8080/gestionproduits/resources/produits";
     private final Client client;
     
     public RapportService() {
@@ -277,7 +277,7 @@ public class IntegrationTest {
 Changez `localhost` par l'adresse IP du serveur hébergeant le Service 2 :
 
 ```java
-private static final String BASE_URL = "http://192.168.1.100:8080/gestionproduits-1.0/api/produits";
+private static final String BASE_URL = "http://192.168.1.100:8080/gestionproduits/resources/produits";
 ```
 
 ### Configuration CORS (si nécessaire)

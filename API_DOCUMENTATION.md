@@ -1,6 +1,6 @@
 # 📚 API REST - Service Gestion des Produits (Service 2)
 
-**Base URL:** `http://localhost:8080/gestionproduits-1.0/api/produits`
+**Base URL:** `http://localhost:8080/gestionproduits/resources/produits`
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 1. Lister tous les produits actifs
 ```http
-GET /api/produits
+GET /resources/produits
 ```
 **Réponse:**
 ```json
@@ -27,9 +27,9 @@ GET /api/produits
 
 ### 2. Obtenir un produit spécifique
 ```http
-GET /api/produits/{id}
+GET /resources/produits/{id}
 ```
-**Exemple:** `GET /api/produits/1`
+**Exemple:** `GET /resources/produits/1`
 
 **Réponse:**
 ```json
@@ -46,9 +46,9 @@ GET /api/produits/{id}
 
 ### 3. Vérifier la disponibilité d'un produit
 ```http
-GET /api/produits/{id}/disponibilite?quantite={qte}
+GET /resources/produits/{id}/disponibilite?quantite={qte}
 ```
-**Exemple:** `GET /api/produits/1/disponibilite?quantite=5`
+**Exemple:** `GET /resources/produits/1/disponibilite?quantite=5`
 
 **Réponse (disponible):**
 ```json
@@ -77,7 +77,7 @@ GET /api/produits/{id}/disponibilite?quantite={qte}
 
 ### 4. Mettre à jour le stock après vente ⭐
 ```http
-PUT /api/produits/{id}/stock
+PUT /resources/produits/{id}/stock
 Content-Type: application/json
 ```
 
@@ -115,7 +115,7 @@ Content-Type: application/json
 
 ### 5. Lister les produits en rupture de stock
 ```http
-GET /api/produits/rupture
+GET /resources/produits/rupture
 ```
 
 **Réponse:**
@@ -151,7 +151,7 @@ GET /api/produits/rupture
 
 ### 6. Ajouter un produit
 ```http
-POST /api/produits
+POST /resources/produits
 Content-Type: application/json
 ```
 
@@ -176,7 +176,7 @@ Content-Type: application/json
 
 ### 7. Modifier un produit
 ```http
-PUT /api/produits/{id}
+PUT /resources/produits/{id}
 Content-Type: application/json
 ```
 
@@ -194,7 +194,7 @@ Content-Type: application/json
 
 ### 8. Supprimer un produit (soft delete)
 ```http
-DELETE /api/produits/{id}
+DELETE /resources/produits/{id}
 ```
 
 **Réponse:**
@@ -225,14 +225,14 @@ DELETE /api/produits/{id}
 
 1. **Service Vente** vérifie la disponibilité:
    ```
-   GET /api/produits/1/disponibilite?quantite=3
+   GET /resources/produits/1/disponibilite?quantite=3
    ```
 
 2. Si disponible, **Service Vente** enregistre la vente dans sa propre BD
 
 3. **Service Vente** met à jour le stock:
    ```
-   PUT /api/produits/1/stock
+   PUT /resources/produits/1/stock
    Body: {"quantiteVendue": 3}
    ```
 
@@ -240,7 +240,7 @@ DELETE /api/produits/{id}
 
 1. **Service Rapport** récupère les produits en rupture:
    ```
-   GET /api/produits/rupture
+   GET /resources/produits/rupture
    ```
 
 2. **Service Rapport** utilise ces données pour générer son rapport
@@ -252,18 +252,18 @@ DELETE /api/produits/{id}
 ### Avec cURL:
 ```bash
 # Lister les produits
-curl -X GET http://localhost:8080/gestionproduits-1.0/api/produits
+curl -X GET http://localhost:8080/gestionproduits/resources/produits
 
 # Vérifier disponibilité
-curl -X GET "http://localhost:8080/gestionproduits-1.0/api/produits/1/disponibilite?quantite=5"
+curl -X GET "http://localhost:8080/gestionproduits/resources/produits/1/disponibilite?quantite=5"
 
 # Mettre à jour le stock
-curl -X PUT http://localhost:8080/gestionproduits-1.0/api/produits/1/stock \
+curl -X PUT http://localhost:8080/gestionproduits/resources/produits/1/stock \
   -H "Content-Type: application/json" \
   -d '{"quantiteVendue": 5}'
 
 # Produits en rupture
-curl -X GET http://localhost:8080/gestionproduits-1.0/api/produits/rupture
+curl -X GET http://localhost:8080/gestionproduits/resources/produits/rupture
 ```
 
 ### Avec Postman:
